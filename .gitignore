@@ -1,0 +1,81 @@
+# =========================
+# OS / General
+# =========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# =========================
+# .NET / Visual Studio
+# =========================
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/TestResults/
+**/*.nupkg
+**/*.snupkg
+**/artifacts/
+**/.idea/    # якщо відкриватимеш backend у Rider
+**/*.DotSettings.user
+
+# dotnet tool restore
+.dotnet/
+
+# ASP.NET secrets / certs
+**/secrets.json
+**/*.pfx
+
+# =========================
+# Node / React
+# =========================
+**/node_modules/
+**/dist/
+**/build/
+**/.next/
+**/.cache/
+**/.eslintcache
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+
+# Vite / React env
+**/.env
+**/.env.*
+!**/.env.example
+
+# =========================
+# Coverage
+# =========================
+**/coverage/
+**/*.lcov
+
+# =========================
+# Local tooling
+# =========================
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# =========================
+# Database / dumps
+# =========================
+*.sqlite
+*.db
+*.bak
+*.dump
+*.sql.gz
+
+# =========================
+# Docs exports (optional)
+# =========================
+**/*.tmp
+**/*.bak
