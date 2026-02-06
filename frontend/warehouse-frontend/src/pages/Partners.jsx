@@ -52,7 +52,7 @@ const Partners = () => {
         <div>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Partners</h2>
-                <Button onClick={() => setShow(true)}>Add Partner</Button>
+                {isAdmin && <Button onClick={() => setShow(true)}>Add Partner</Button>}
             </div>
 
             <Table striped bordered hover>

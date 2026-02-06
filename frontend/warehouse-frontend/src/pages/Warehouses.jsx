@@ -50,7 +50,7 @@ const Warehouses = () => {
         <div>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Warehouses</h2>
-                <Button onClick={() => setShow(true)}>Add Warehouse</Button>
+                {isAdmin && <Button onClick={() => setShow(true)}>Add Warehouse</Button>}
             </div>
 
             <Table striped bordered hover>

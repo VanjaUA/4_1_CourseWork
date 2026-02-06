@@ -51,7 +51,7 @@ const Products = () => {
         <div>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2>Products</h2>
-                <Button onClick={() => setShow(true)}>Add Product</Button>
+                {isAdmin && <Button onClick={() => setShow(true)}>Add Product</Button>}
             </div>
 
             <Table striped bordered hover>
