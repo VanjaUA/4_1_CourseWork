@@ -1,32 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Form, Button, Card, Container, Alert } from 'react-bootstrap';
-import { useAuth } from '../auth/AuthContext';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import api from '../api/http';
 
-const Login = () => {
+const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
-    const [successMsg, setSuccessMsg] = useState('');
-
-    useEffect(() => {
-        if (location.state?.message) {
-            setSuccessMsg(location.state.message);
-        }
-    }, [location]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccessMsg('');
-        const success = await login(email, password);
-        if (success) {
-            navigate('/');
-        } else {
-            setError('Invalid email or password');
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            await api.post('/Auth/register', { email, password });
+            // Redirect to login with success indicator could be better, but simple redirect works for now.
+            navigate('/login', { state: { message: 'Registration successful! Please login.' } });
+        } catch (err) {
+            console.error('Registration failed', err);
+            setError('Registration failed. Email might be taken or invalid.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -34,8 +37,7 @@ const Login = () => {
         <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
             <Card style={{ width: '400px' }}>
                 <Card.Body>
-                    <h2 className="text-center mb-4">Login</h2>
-                    {successMsg && <Alert variant="success">{successMsg}</Alert>}
+                    <h2 className="text-center mb-4">Register</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3">
@@ -56,10 +58,21 @@ const Login = () => {
                                 required
                             />
                         </Form.Group>
-                        <Button className="w-100 mb-3" type="submit">Log In</Button>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control
+                                type="password"
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Button className="w-100 mb-3" type="submit" disabled={loading}>
+                            {loading ? 'Registering...' : 'Register'}
+                        </Button>
                     </Form>
                     <div className="text-center">
-                        Need an account? <Link to="/register">Create account</Link>
+                        Already have an account? <Link to="/login">Login</Link>
                     </div>
                 </Card.Body>
             </Card>
@@ -67,4 +80,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

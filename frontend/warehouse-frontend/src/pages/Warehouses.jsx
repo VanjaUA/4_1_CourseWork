@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Alert } from 'react-bootstrap';
 import api from '../api/http';
+import { useAuth } from '../auth/AuthContext';
 
 const Warehouses = () => {
     const [items, setItems] = useState([]);
     const [show, setShow] = useState(false);
     const [formData, setFormData] = useState({ name: '', location: '' });
     const [error, setError] = useState('');
+    const { isAdmin } = useAuth();
 
     const fetchItems = async () => {
         try {
@@ -56,7 +58,7 @@ const Warehouses = () => {
                     <tr>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>Actions</th>
+                        {isAdmin && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -64,9 +66,11 @@ const Warehouses = () => {
                         <tr key={item.id}>
                             <td>{item.name}</td>
                             <td>{item.location}</td>
-                            <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
-                            </td>
+                            {isAdmin && (
+                                <td>
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>

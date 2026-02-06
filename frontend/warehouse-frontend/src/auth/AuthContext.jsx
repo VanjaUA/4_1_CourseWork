@@ -9,10 +9,9 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
         if (token) {
-            // Decode token or just assume logged in for now. 
-            // Ideally call /api/Auth/me if exists, but we'll just set a flag.
-            setUser({ token });
+            setUser({ token, role });
         }
         setLoading(false);
     }, []);
@@ -22,6 +21,7 @@ export const AuthProvider = ({ children }) => {
             const response = await api.post('/Auth/login', { email, password });
             const { token, role } = response.data;
             localStorage.setItem('token', token);
+            localStorage.setItem('role', role);
             setUser({ token, role });
             return true;
         } catch (error) {
@@ -32,11 +32,14 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('role');
         setUser(null);
     };
 
+    const isAdmin = user?.role === 'Admin';
+
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, logout, loading, isAdmin }}>
             {!loading && children}
         </AuthContext.Provider>
     );

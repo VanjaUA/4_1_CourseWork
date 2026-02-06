@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Alert } from 'react-bootstrap';
 import api from '../api/http';
+import { useAuth } from '../auth/AuthContext';
 
 const Partners = () => {
     const [items, setItems] = useState([]);
     const [show, setShow] = useState(false);
     const [formData, setFormData] = useState({ name: '', contactInfo: '', type: 1 });
     const [error, setError] = useState('');
+    const { isAdmin } = useAuth();
 
     const fetchItems = async () => {
         try {
@@ -59,7 +61,7 @@ const Partners = () => {
                         <th>Name</th>
                         <th>Type</th>
                         <th>Contact</th>
-                        <th>Actions</th>
+                        {isAdmin && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -68,9 +70,11 @@ const Partners = () => {
                             <td>{item.name}</td>
                             <td>{getTypeName(item.type)}</td>
                             <td>{item.contactInfo}</td>
-                            <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
-                            </td>
+                            {isAdmin && (
+                                <td>
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>

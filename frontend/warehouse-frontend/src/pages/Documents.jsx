@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Alert, Row, Col } from 'react-bootstrap';
 import api from '../api/http';
+import { useAuth } from '../auth/AuthContext';
 
 const Documents = () => {
     const [documents, setDocuments] = useState([]);
     const [show, setShow] = useState(false);
+    const { isAdmin } = useAuth();
 
     // Data for dropdowns
     const [warehouses, setWarehouses] = useState([]);
@@ -123,7 +125,7 @@ const Documents = () => {
                         <th>Warehouse</th>
                         <th>Partner</th>
                         <th>Date</th>
-                        <th>Actions</th>
+                        {isAdmin && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -134,9 +136,11 @@ const Documents = () => {
                             <td>{d.warehouseName}</td>
                             <td>{d.partnerName || '-'}</td>
                             <td>{new Date(d.createdAt).toLocaleString()}</td>
-                            <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(d.id)}>Delete</Button>
-                            </td>
+                            {isAdmin && (
+                                <td>
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(d.id)}>Delete</Button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>

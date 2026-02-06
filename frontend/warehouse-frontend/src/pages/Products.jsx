@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Alert } from 'react-bootstrap';
 import api from '../api/http';
+import { useAuth } from '../auth/AuthContext';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
     const [show, setShow] = useState(false);
     const [formData, setFormData] = useState({ sku: '', name: '', unit: 'pcs', unitPrice: 0, minStock: 0 });
     const [error, setError] = useState('');
+    const { isAdmin } = useAuth();
 
     const fetchProducts = async () => {
         try {
@@ -60,7 +62,7 @@ const Products = () => {
                         <th>Unit</th>
                         <th>Price</th>
                         <th>Min Stock</th>
-                        <th>Actions</th>
+                        {isAdmin && <th>Actions</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -71,9 +73,11 @@ const Products = () => {
                             <td>{p.unit}</td>
                             <td>{p.unitPrice}</td>
                             <td>{p.minStock}</td>
-                            <td>
-                                <Button variant="danger" size="sm" onClick={() => handleDelete(p.id)}>Delete</Button>
-                            </td>
+                            {isAdmin && (
+                                <td>
+                                    <Button variant="danger" size="sm" onClick={() => handleDelete(p.id)}>Delete</Button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
